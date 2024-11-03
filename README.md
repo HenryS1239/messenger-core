@@ -12,7 +12,11 @@ Core System built by [Nest](https://github.com/nestjs/nest) framework TypeScript
 NPM version: 9.6.4 <br/> Node version: 20.0.0
 
 ```bash
+Install Packages: 
 $ npm install --legacy-peer-deps
+
+Seed Init Database: 
+$ npm run seed
 ```
 
 ## Running the app
