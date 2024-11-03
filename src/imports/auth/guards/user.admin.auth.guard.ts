@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, UnauthorizedException, Injectable } from '@nestjs/common';
-import { PLATFORM } from '@src/constants';
+import { PLATFORM, USER_TYPES } from '@src/constants';
 import { AuthService } from '../auth.service';
 
 @Injectable()
@@ -15,6 +15,9 @@ export class AdminAuthGuard implements CanActivate {
         const user = await this.auth.user.validate(authorization);
         if (user.isDisabled) {
             throw new UnauthorizedException(`Account is disabled`);
+        }
+        if (user.type !== USER_TYPES.ADMIN) {
+            throw new UnauthorizedException(`Account not allowed`);
         }
 
         context.switchToHttp().getRequest().user = user;

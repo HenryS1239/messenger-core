@@ -1,27 +1,14 @@
-import {
-    Body,
-    Controller,
-    ForbiddenException,
-    Get,
-    Logger,
-    NotAcceptableException,
-    NotFoundException,
-    Param,
-    Post,
-    Put,
-    UnauthorizedException,
-    UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Logger, NotFoundException, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
 
-import { AdminAuthGuard, AuthService } from '@src/imports/auth';
+import { UserAppAuthGuard, AuthService } from '@src/imports/auth';
 import { DatabaseService } from '@src/imports/database';
 import { AccessToken, RemoteClient, User } from '@src/decorations';
 import { SyslogService } from '@src/imports/logger';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { LoginDTO, RegisterFCMTokenDTO, UpdatePasswordDTO } from '@src/modules/api/core/dto/auth.dto';
+import { LoginDTO, RegisterFCMTokenDTO } from './dto/auth.dto';
 
-@ApiTags('Core:Auth')
-@Controller('/api/core/auth')
+@ApiTags('Common:Auth')
+@Controller('/api/auth')
 export class AuthController {
     private readonly logger = new Logger(AuthController.name);
 
@@ -52,14 +39,14 @@ export class AuthController {
 
     @ApiBearerAuth()
     @Get('profile')
-    @UseGuards(AdminAuthGuard)
+    @UseGuards(UserAppAuthGuard)
     async getProfile(@User() usr) {
         return await this.database.User.findOne({ _id: usr._id }).populate('role');
     }
 
     @ApiBearerAuth()
     @Post('fcm')
-    @UseGuards(AdminAuthGuard)
+    @UseGuards(UserAppAuthGuard)
     async registerFCMToken(@User() usr, @Body() body: RegisterFCMTokenDTO) {
         const user = await this.database.User.findOne({ _id: usr._id });
         if (!user) {
@@ -73,7 +60,7 @@ export class AuthController {
 
     @ApiBearerAuth()
     @Post('opt-in-out')
-    @UseGuards(AdminAuthGuard)
+    @UseGuards(UserAppAuthGuard)
     async optInNotification(@User() usr) {
         const user = await this.database.User.findOne({ _id: usr._id });
         if (!user) {

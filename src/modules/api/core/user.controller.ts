@@ -86,9 +86,7 @@ export class UserController {
                 throw new NotAcceptableException('An account is already registered with your email. Please try again.');
             }
 
-            const adminRole = await this.database.Role.findOne({ type: USER_ROLE_TYPES.ADMIN });
-
-            if (body.type === USER_TYPES.ADMIN && body.role === adminRole._id.toString() && !body.password) {
+            if (!body.password) {
                 throw new NotAcceptableException('Please include a password with the registration.');
             }
 
@@ -101,15 +99,7 @@ export class UserController {
                 type: user?.type,
             };
 
-            let newPassword = null;
-
-            if (body.type === USER_TYPES.ADMIN && body.role === adminRole._id.toString() && body.password) {
-                newPassword = body.password;
-            } else {
-                newPassword = random.alhanumeric(6);
-            }
-
-            newUser.password = newPassword;
+            newUser.password = body.password;
 
             await newUser.save();
 

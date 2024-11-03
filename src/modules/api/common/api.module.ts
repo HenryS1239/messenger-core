@@ -6,15 +6,11 @@ import { UtilModule } from '@src/imports/util';
 import { LoggerModule } from '@src/imports/logger';
 import { NotificationService } from '@src/imports/notifications/notification.service';
 
-import { LogsController } from './logs.controller';
-import { UserController } from './user.controller';
-import { HelpersController } from './helpers.controller';
-import { MessageController } from './message.controller';
-import { RoleController } from './role.controller';
+import { AuthController } from './auth.controller';
 
 @Module({
     imports: [AuthModule, DatabaseModule, SharedModule, UtilModule, LoggerModule],
-    controllers: [LogsController, UserController, HelpersController, MessageController, RoleController],
+    controllers: [AuthController],
     providers: [NotificationService],
 })
 export class ApiModule {}
