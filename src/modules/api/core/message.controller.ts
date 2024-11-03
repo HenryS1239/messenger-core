@@ -16,6 +16,7 @@ import { DatabaseService } from '@src/imports/database';
 import { CreateMessageDTO } from './dto/message.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SyslogService } from '@src/imports/logger';
+import { IMessage } from '@src/imports/database/schema';
 
 @ApiTags('Core:Message')
 @ApiBearerAuth()
@@ -40,7 +41,7 @@ export class MessageController {
             }
 
             const total = await this.database.Message.countDocuments(query);
-            const items = await this.database.Message.find(query).skip(parseInt(offset)).limit(parseInt(limit));
+            const items = await this.database.Message.find(query).populate('receipient').skip(parseInt(offset)).limit(parseInt(limit));
 
             return { total, items };
         } catch (error) {
