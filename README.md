@@ -5,12 +5,14 @@
 
 ## Description
 
-Core System built by [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Core System built by [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository. <br/> Core API for Messenger Portal. Implemented login authentication, message broadcasts and Firebase Cloud Messaging Push system.
 
 ## Installation
 
+NPM version: 9.6.4 <br/> Node version: 20.0.0
+
 ```bash
-$ yarn install
+$ npm install --legacy-peer-deps
 ```
 
 ## Running the app
