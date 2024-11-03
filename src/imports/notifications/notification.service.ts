@@ -5,8 +5,7 @@ import { Firebase } from '@src/imports/notifications/firebase';
 import { PLATFORM } from '@src/constants';
 
 type AppEvent = {
-    app({ event, user, data }): Promise<any> | any;
-    web({ event, user, data }): Promise<any> | any;
+    app({ event, user }): Promise<any> | any;
 };
 type GetEvent = {
     list(search: NotificationSearch): Promise<any>;
@@ -63,21 +62,9 @@ export class NotificationService {
 
     public get send(): AppEvent {
         return {
-            web: async ({ event, user, data }) => {
+            app: async ({ event, user }) => {
                 const details = event;
-
-                //== STORE PUSH MESSAGE TO DB
-                await this.add({
-                    appNotifiedAt: new Date(),
-                    user,
-                    isBrowserRequest: true,
-                    ...details,
-                });
-            },
-            app: async ({ event, user, data }) => {
-                const details = event;
-
-                //== SEND PUSH NOTIFICATION
+                //== SEND PUSH NOTIFICATION VIA FIREBASE
                 if (user.isNotification && user.registrationTokens) {
                     await Firebase.instance().send({
                         customer: user,
@@ -85,11 +72,9 @@ export class NotificationService {
                             title: details.title,
                             message: details.message,
                         },
-                        target: details.target,
-                        targetId: details.targetId,
                     });
                 }
-                //== STORE PUSH MESSAGE TO DB
+                //== STORE PUSH MESSAGE TO DATABASE
                 await this.add({
                     appNotifiedAt: new Date(),
                     user,

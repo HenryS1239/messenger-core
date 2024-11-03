@@ -10,20 +10,27 @@ import {
     NotFoundException,
     InternalServerErrorException,
     Req,
+    Logger,
 } from '@nestjs/common';
 import { AdminAuthGuard } from '@src/imports/auth';
 import { DatabaseService } from '@src/imports/database';
 import { CreateMessageDTO } from './dto/message.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SyslogService } from '@src/imports/logger';
-import { IMessage } from '@src/imports/database/schema';
+import { NotificationService } from '@src/imports/notifications/notification.service';
 
 @ApiTags('Core:Message')
 @ApiBearerAuth()
 @Controller('/api/core/message')
 @ApiBearerAuth()
 export class MessageController {
-    constructor(public readonly database: DatabaseService, private readonly syslog: SyslogService) {}
+    private readonly logger = new Logger(MessageController.name);
+
+    constructor(
+        public readonly database: DatabaseService,
+        private readonly notification: NotificationService,
+        private readonly syslog: SyslogService,
+    ) {}
 
     @Get('')
     @ApiQuery({ name: 'offset', type: Number, required: true })
@@ -54,7 +61,7 @@ export class MessageController {
     @UseGuards(AdminAuthGuard)
     async get(@Param('id') _id) {
         try {
-            const message = this.database.Message.findOne({ _id, deletedAt: null });
+            const message = await this.database.Message.findOne({ _id, deletedAt: null });
             return message;
         } catch (error) {
             this.syslog.audit.error(`[GET] /core/message/${_id} - ${error.message}`);
@@ -70,9 +77,25 @@ export class MessageController {
             rs.createdBy = user;
             await rs.save();
 
-            //TODO: -Broadcast Message via FCM
+            const currentUser = await this.database.User.find({
+                _id: { $in: body.receipient },
+                deletedAt: null,
+            }).select('+registrationTokens');
+
+            //for each receipient selected, send browser notification
+            for (const eachUser of currentUser) {
+                await this.notification.send.app({
+                    event: {
+                        title: body.subject,
+                        message: body.content,
+                    },
+                    user: eachUser,
+                });
+            }
+
             return { success: true, data: rs };
         } catch (error) {
+            this.logger.debug(error);
             this.syslog.audit.error(`[POST] /core/message/ - ${error.message}`);
             throw new InternalServerErrorException(error.message);
         }

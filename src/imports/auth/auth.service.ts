@@ -3,7 +3,6 @@ import { DatabaseService } from '../database';
 import * as jwt from 'jsonwebtoken';
 import { TokenExpiredError } from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
-import { SettingService } from '@src/imports/util';
 import { random } from '@src/util';
 import {
     AUTH_USER_ALLOWED_MULTI_LOGIN,
@@ -33,7 +32,7 @@ type UserAuthContract<T> = {
 export class AuthService {
     private readonly logger = new Logger(AuthService.name);
     //--
-    constructor(private readonly database: DatabaseService, private readonly settings: SettingService) {}
+    constructor(private readonly database: DatabaseService) {}
 
     public get config() {
         const toBoolean = (v: any) => ['true', '1'].includes(`${v}`.toLowerCase());

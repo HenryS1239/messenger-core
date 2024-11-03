@@ -21,40 +21,12 @@ export class UpdatePasswordDTO {
     password: string;
 }
 
-export class UpdateProfileDTO {
-    @IsOptional()
-    @ApiProperty()
-    name: string;
-
-    @IsOptional()
-    @ApiProperty()
-    email: string;
-
-    @IsOptional()
-    @ApiProperty()
-    contact: string;
-
-    @IsOptional()
-    @ApiProperty()
-    photo: string;
-}
-
-export class ForgetPasswordDTO {
+export class RegisterFCMTokenDTO {
     @IsNotEmpty()
     @ApiProperty()
-    email: string;
-}
-
-export class ResetPasswordDTO {
-    @IsNotEmpty()
-    @ApiProperty()
-    email: string;
+    fcmToken: string;
 
     @IsNotEmpty()
     @ApiProperty()
-    token: string;
-
-    @IsNotEmpty()
-    @ApiProperty()
-    password: string;
+    isNotification: boolean;
 }

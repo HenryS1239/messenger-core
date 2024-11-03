@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { ICounter, IFile, ISelector, IMessage, IUser, INotification } from './schema';
+import { ICounter, IFile, IMessage, IUser, INotification } from './schema';
 
 @Injectable()
 export class DatabaseService {
@@ -15,7 +15,5 @@ export class DatabaseService {
         @InjectModel('Message') public readonly Message: Model<IMessage>,
         @InjectModel('Role') public readonly Role: Model<any>,
         @InjectModel('Notification') public readonly Notification: Model<INotification>,
-        @InjectModel('Selector') public readonly Selectors: Model<ISelector>,
-        @InjectModel('Setting') public readonly Setting: Model<any>,
     ) {}
 }

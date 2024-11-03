@@ -9,8 +9,6 @@ import {
     LogSchema,
     MessageSchema,
     RoleSchema,
-    SelectorsSchema,
-    SettingSchema,
     NotificationSchema,
 } from './schema';
 
@@ -25,8 +23,6 @@ import {
             { name: 'AppLog', schema: LogSchema },
             { name: 'Message', schema: MessageSchema },
             { name: 'Role', schema: RoleSchema },
-            { name: 'Selector', schema: SelectorsSchema },
-            { name: 'Setting', schema: SettingSchema },
             { name: 'Notification', schema: NotificationSchema },
         ]),
     ],

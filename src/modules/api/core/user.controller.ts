@@ -33,9 +33,10 @@ export class UserController {
     @ApiQuery({ name: 'offset', type: Number, required: true })
     @ApiQuery({ name: 'limit', type: Number, required: true })
     @ApiQuery({ name: 'search', type: String, required: false })
+    @ApiQuery({ name: 'types', type: String, required: false })
     @Get('')
     @UseGuards(AdminAuthGuard)
-    async list(@Query() { limit, offset, search, type }) {
+    async list(@Query() { limit, offset, search, types }) {
         try {
             const query: any = { deletedAt: null };
             if (search) {
@@ -45,8 +46,8 @@ export class UserController {
                     { username: { $regex: new RegExp(search, 'i') } },
                 ];
             }
-            if (type) {
-                query.type = { $in: type.split(',') };
+            if (types) {
+                query.type = { $in: types.split(',') };
             }
 
             const total = await this.database.User.countDocuments(query);
@@ -59,6 +60,7 @@ export class UserController {
         }
     }
 
+    @Get(':id')
     @ApiParam({ name: 'id' })
     @UseGuards(AdminAuthGuard)
     async get(@Param('id') _id) {

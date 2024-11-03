@@ -2,13 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DatabaseService } from '@src/imports/database';
 
 import { USERS, ROLES } from './seeds/seed';
-import { SettingService } from '@src/imports/util';
 
 @Injectable()
 export class SeederService {
     private readonly logger = new Logger(SeederService.name);
 
-    constructor(private readonly database: DatabaseService, private readonly setting: SettingService) {}
+    constructor(private readonly database: DatabaseService) {}
 
     public async data() {
         for (const r of ROLES) {

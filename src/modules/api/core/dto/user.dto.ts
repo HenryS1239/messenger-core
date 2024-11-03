@@ -24,39 +24,11 @@ export class UserCreateDTO {
 
     @IsOptional()
     @ApiProperty()
-    company: string;
-
-    @IsNotEmpty()
-    @ApiProperty()
-    platforms: string[];
-
-    @IsOptional()
-    @ApiProperty()
-    photo: string[];
-
-    @IsOptional()
-    @ApiProperty()
     contact: string;
 
     @IsOptional()
     @ApiProperty()
     email: string;
-
-    @IsOptional()
-    @ApiProperty()
-    profession: string;
-
-    @IsOptional()
-    @ApiProperty()
-    department: string;
-
-    @IsOptional()
-    @ApiProperty()
-    vendorType: string;
-
-    @IsOptional()
-    @ApiProperty()
-    customerType: string;
 
     @IsOptional()
     @ApiProperty()
@@ -81,39 +53,11 @@ export class UserUpdateDTO {
 
     @IsOptional()
     @ApiProperty()
-    company: string;
-
-    @IsNotEmpty()
-    @ApiProperty()
-    platforms: string[];
-
-    @IsOptional()
-    @ApiProperty()
-    photo: string[];
-
-    @IsOptional()
-    @ApiProperty()
     contact: string;
 
     @IsOptional()
     @ApiProperty()
     email: string;
-
-    @IsOptional()
-    @ApiProperty()
-    profession: string;
-
-    @IsOptional()
-    @ApiProperty()
-    department: string;
-
-    @IsOptional()
-    @ApiProperty()
-    vendorType: string;
-
-    @IsOptional()
-    @ApiProperty()
-    customerType: string;
 
     @IsOptional()
     @ApiProperty()
