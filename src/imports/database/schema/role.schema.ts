@@ -10,6 +10,7 @@ const schema = new Schema(
             required: true,
         },
         type: { type: Schema.Types.String, enum: Object.values(USER_ROLE_TYPES), required: true },
+        canDelete: { type: Schema.Types.Boolean, default: true },
         ...UserRecordTemplate.STANDARD_UR,
     },
     {
@@ -30,7 +31,6 @@ export interface IUserRecord {
 export interface IRole extends Document {
     name: string;
     type: string;
-
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;

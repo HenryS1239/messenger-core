@@ -16,6 +16,7 @@ export class SeederService {
                 role = await this.database.Role.create({
                     name: r.name,
                     type: r.type,
+                    canDelete: r.canDelete,
                 });
                 this.logger.log(`created ${r.name} role`);
             }

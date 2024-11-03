@@ -16,9 +16,11 @@ export const ROLES = [
     {
         name: 'admin',
         type: USER_TYPES.ADMIN,
+        canDelete: false,
     },
     {
         name: 'customer',
         type: USER_TYPES.CUSTOMER,
+        canDelete: true,
     },
 ];
