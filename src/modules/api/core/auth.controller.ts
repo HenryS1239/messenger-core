@@ -66,7 +66,20 @@ export class AuthController {
             throw new NotFoundException(`User not found.`);
         }
         user.registrationTokens = body.fcmToken;
-        user.isNotification = true;
+
+        await user.save();
+        return user;
+    }
+
+    @ApiBearerAuth()
+    @Post('opt-in-out')
+    @UseGuards(AdminAuthGuard)
+    async optInNotification(@User() usr) {
+        const user = await this.database.User.findOne({ _id: usr._id });
+        if (!user) {
+            throw new NotFoundException(`User not found.`);
+        }
+        user.isNotification = !user.isNotification;
 
         await user.save();
         return user;
@@ -76,28 +89,5 @@ export class AuthController {
     @Get('logout')
     async logout(@AccessToken() token) {
         return { success: await this.auth.token(token).void() };
-    }
-
-    @ApiBearerAuth()
-    @Put('password')
-    @UseGuards(AdminAuthGuard)
-    async updatePassword(@User() usr, @Body() body: UpdatePasswordDTO, @RemoteClient() client) {
-        const user = await this.database.User.findOne({ _id: usr._id });
-        if (!user) {
-            throw new NotFoundException(`Data not found.`);
-        }
-
-        const { current, password } = body;
-        const ok = await this.auth.user.attempt({
-            email: user.email,
-            password: current,
-        });
-        if (ok) {
-            user.password = password;
-            await user.save();
-            this.syslog.audit.info(`user ${user.email} updated own password from ${client.ip}`);
-            return { success: true };
-        }
-        throw new ForbiddenException();
     }
 }
