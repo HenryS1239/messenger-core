@@ -10,7 +10,11 @@ export class CreateMessageDTO {
     @ApiProperty()
     content?: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @ApiProperty()
     receipient: string[];
+
+    @IsOptional()
+    @ApiProperty()
+    selectAll: boolean;
 }

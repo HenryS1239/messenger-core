@@ -11,6 +11,7 @@ import {
     InternalServerErrorException,
     Req,
     Logger,
+    BadRequestException,
 } from '@nestjs/common';
 import { AdminAuthGuard } from '@src/imports/auth';
 import { DatabaseService } from '@src/imports/database';
@@ -18,6 +19,7 @@ import { CreateMessageDTO } from './dto/message.dto';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SyslogService } from '@src/imports/logger';
 import { NotificationService } from '@src/imports/notifications/notification.service';
+import { USER_TYPES } from '@src/constants';
 
 @ApiTags('Core:Message')
 @ApiBearerAuth()
@@ -73,7 +75,22 @@ export class MessageController {
     @UseGuards(AdminAuthGuard)
     async broadcastMessage(@Body() body: CreateMessageDTO, @Req() { user }) {
         try {
-            const rs = new this.database.Message(body);
+            if (!body.selectAll && !body.receipient) {
+                throw new BadRequestException(`Invalid receipients! Please select at least 1 receipient`);
+            }
+            const set = body;
+            if (body.selectAll) {
+                const allCustomerUsers = await this.database.User.find({
+                    type: USER_TYPES.CUSTOMER,
+                    deletedAt: null,
+                })
+                    .select('_id')
+                    .lean();
+                delete set.receipient;
+                set.receipient = allCustomerUsers.map((user) => user._id);
+            }
+
+            const rs = new this.database.Message(set);
             rs.createdBy = user;
             await rs.save();
 
