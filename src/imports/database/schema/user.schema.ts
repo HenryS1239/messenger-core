@@ -18,7 +18,7 @@ const schema = new Schema(
         isDisabled: { type: Schema.Types.Boolean, default: false },
 
         contact: { type: Schema.Types.String, default: null },
-        email: { type: Schema.Types.String, default: null, unique: true },
+        email: { type: Schema.Types.String, default: null },
 
         lastLogin: { type: Schema.Types.Date, default: null },
         ...UserRecordTemplate.STANDARD_UR,
